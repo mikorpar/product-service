@@ -1,0 +1,22 @@
+services:
+  postgres:
+    container_name: product-service-db
+    image: 'postgres:17.5'
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '5432'
+    volumes:
+      - 'postgresql:/var/lib/postgresql/data'
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgresql:
