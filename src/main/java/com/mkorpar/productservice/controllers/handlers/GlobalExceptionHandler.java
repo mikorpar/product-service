@@ -3,6 +3,7 @@ package com.mkorpar.productservice.controllers.handlers;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.mkorpar.productservice.data.rest.ErrorData;
 import com.mkorpar.productservice.data.rest.ValidationErrorData;
+import com.mkorpar.productservice.data.rest.ValidationErrorDataList;
 import com.mkorpar.productservice.exceptions.DuplicateProductCodeException;
 import com.mkorpar.productservice.exceptions.ProductNotFoundException;
 import jakarta.validation.ConstraintViolation;
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, List<ValidationErrorData>>> handleValidationException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ValidationErrorDataList> handleValidationException(MethodArgumentNotValidException e) {
         return createResponse(getValidationErrors(e.getBindingResult()));
     }
 
@@ -43,7 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String, List<ValidationErrorData>>> handleViolationException(ConstraintViolationException e) {
+    public ResponseEntity<ValidationErrorDataList> handleViolationException(ConstraintViolationException e) {
         return createResponse(getValidationErrors(e.getConstraintViolations()));
     }
 
@@ -63,8 +64,8 @@ public class GlobalExceptionHandler {
         return fieldName;
     }
 
-    private ResponseEntity<Map<String, List<ValidationErrorData>>> createResponse(List<ValidationErrorData> validationErrors) {
-        return ResponseEntity.badRequest().body(Map.of("errors", validationErrors));
+    private ResponseEntity<ValidationErrorDataList> createResponse(List<ValidationErrorData> validationErrors) {
+        return ResponseEntity.badRequest().body(new ValidationErrorDataList(validationErrors));
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
@@ -75,6 +76,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateProductCodeException.class)
     private ResponseEntity<ErrorData> handleDuplicateProductCodeException(DuplicateProductCodeException e) {
         return handleException(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<ErrorData> handleException(Exception e) {
+        return handleException(e, HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<ErrorData> handleException(Exception e, HttpStatusCode status) {
