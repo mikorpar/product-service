@@ -58,7 +58,7 @@ public final class PropertyNamingStrategyUtils {
         }
     }
 
-    private static class NullPropertyNamingStrategy extends PropertyNamingStrategies.NamingBase {
+    protected static class NullPropertyNamingStrategy extends PropertyNamingStrategies.NamingBase {
         @Serial
         private static final long serialVersionUID = 1L;
 
