@@ -66,14 +66,14 @@ public class ExchangeRateApiClient {
     }
 
     private void validateResponseBody(ExchangeRateCurrency currency, LocalDate date, List<ExchangeRateApiResponse> body) {
-        if (body == null) {
+        if (body.isEmpty()) {
             throw new ExchangeRateUnavailableException(
-                    String.format("Exchange rate response body is null for currency %s on date %s.",  currency, date)
+                    String.format("Exchange rate not sent for currency %s on date %s.",  currency, date)
             );
         }
-        if (body.size() != 1) {
+        if (body.size() > 1) {
             throw new ExchangeRateUnavailableException(
-                    String.format("Multiple exchange rates for for currency %s on date %s.",  currency, date)
+                    String.format("Multiple exchange rates sent for currency %s on date %s.",  currency, date)
             );
         }
     }
