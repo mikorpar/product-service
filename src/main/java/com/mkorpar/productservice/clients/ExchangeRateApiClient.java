@@ -48,10 +48,9 @@ public class ExchangeRateApiClient {
                                                                       ExchangeRateCurrency currency,
                                                                       LocalDate date) {
         return restClient.get()
-                .uri(urlTemplate, currency, date.toString())
+                .uri(urlTemplate, currency, date)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, (request, response) -> {})
                 .toEntity(new ParameterizedTypeReference<>() {});
     }
 
