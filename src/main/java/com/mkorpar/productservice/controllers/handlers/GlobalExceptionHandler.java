@@ -69,18 +69,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
-    private ResponseEntity<ErrorData> handleProductNotFoundException(ProductNotFoundException e) {
+    public ResponseEntity<ErrorData> handleProductNotFoundException(ProductNotFoundException e) {
         return handleException(e, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateProductCodeException.class)
-    private ResponseEntity<ErrorData> handleDuplicateProductCodeException(DuplicateProductCodeException e) {
+    public ResponseEntity<ErrorData> handleDuplicateProductCodeException(DuplicateProductCodeException e) {
         return handleException(e, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(Exception.class)
-    private ResponseEntity<ErrorData> handleException(Exception e) {
-        return handleException(e, HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<ErrorData> handleException(Exception e, HttpStatusCode status) {
