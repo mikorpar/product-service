@@ -2,11 +2,13 @@ package com.mkorpar.productservice.data.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
+@AllArgsConstructor
 @Schema(description = "Request body for creating a product.")
 public class ProductReqDTO {
 
