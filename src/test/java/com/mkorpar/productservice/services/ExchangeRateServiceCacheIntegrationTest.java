@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -53,12 +54,15 @@ class ExchangeRateServiceCacheIntegrationTest {
 
         // Act && Assert
         verifyNoInteractions(exchangeRateApiClient);
+        Optional<BigDecimal> exchangeRate;
 
-        exchangeRateService.getEurToUsdExchangeRate(DATE);
+        exchangeRate = exchangeRateService.getEurToUsdExchangeRate(DATE);
+        assertThat(exchangeRate).containsSame(expectedRate);
         verify(exchangeRateApiClient, times(1))
                 .getExchangeRateAgainstEuro(ExchangeRateCurrency.USD, DATE);
 
-        exchangeRateService.getEurToUsdExchangeRate(DATE);
+        exchangeRate = exchangeRateService.getEurToUsdExchangeRate(DATE);
+        assertThat(exchangeRate).containsSame(expectedRate);
         verify(exchangeRateApiClient, times(1))
                 .getExchangeRateAgainstEuro(ExchangeRateCurrency.USD, DATE);
     }
