@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: "maven" 
+    directory: "/" 
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:00"
+      timezone: "Europe/Zagreb"
+    labels: 
+      - "dependencies"
+      - "maven"
+      
+  - package-ecosystem: "github-actions" 
+    directory: "/" 
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:00"
+      timezone: "Europe/Zagreb"
+    labels:
+      - "dependencies"
+      - "github-actions"
