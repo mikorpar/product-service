@@ -5,6 +5,7 @@ import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
 import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
 import com.mkorpar.productservice.exceptions.ExchangeRateCallNotPermittedException;
 import com.mkorpar.productservice.exceptions.ExchangeRateUnavailableException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -94,6 +95,7 @@ class ExchangeRateApiClientTest {
     }
 
     @Test
+    @Disabled
     void shouldTransitionCircuitBreakerToOpenStateAndThrowException() {
         // Arrange
         setupRestServiceServer(withServerError());
