@@ -9,6 +9,7 @@ import com.mkorpar.productservice.data.models.Product;
 import com.mkorpar.productservice.exceptions.DuplicateProductCodeException;
 import com.mkorpar.productservice.exceptions.ProductNotFoundException;
 import com.mkorpar.productservice.repositories.ProductRepository;
+import com.mkorpar.productservice.services.impl.DefaultProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
