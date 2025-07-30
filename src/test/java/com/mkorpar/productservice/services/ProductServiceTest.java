@@ -1,5 +1,8 @@
 package com.mkorpar.productservice.services;
 
+import com.mkorpar.productservice.clients.ExchangeRateApiClient;
+import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
+import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
 import com.mkorpar.productservice.data.dtos.ProductReqDTO;
 import com.mkorpar.productservice.data.dtos.ProductResDTO;
 import com.mkorpar.productservice.data.models.Product;
@@ -8,19 +11,28 @@ import com.mkorpar.productservice.exceptions.ProductNotFoundException;
 import com.mkorpar.productservice.repositories.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
+@ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
+
+    private final BigDecimal EXCHANGE_RATE = BigDecimal.valueOf(1.1);
 
     @Autowired
     private ProductService productService;
@@ -28,11 +40,19 @@ class ProductServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @MockitoBean
+    private ExchangeRateApiClient exchangeRateApiClient;
+
     private ProductReqDTO productToCreate;
 
     @BeforeEach
     void setUp() {
         productToCreate = createProductReqDTO("PRODUCT001", "Test product", 99.99, true);
+
+        ExchangeRateApiResponse response = new ExchangeRateApiResponse();
+        response.setMiddleRate(EXCHANGE_RATE);
+        when(exchangeRateApiClient.getExchangeRateAgainstEuro(ExchangeRateCurrency.USD, LocalDate.now()))
+                .thenReturn(response);
     }
 
     @Test
@@ -45,6 +65,9 @@ class ProductServiceTest {
         assertThat(createdProduct.getCode()).isEqualTo(productToCreate.getCode());
         assertThat(createdProduct.getName()).isEqualTo(productToCreate.getName());
         assertThat(createdProduct.getPriceEur()).isEqualTo(productToCreate.getPriceEur());
+        assertThat(createdProduct.getPriceUsd()).isEqualTo(
+                productToCreate.getPriceEur().multiply(EXCHANGE_RATE).setScale(2, RoundingMode.HALF_UP)
+        );
         assertThat(createdProduct.isAvailable()).isEqualTo(productToCreate.isAvailable());
 
         List<Product> allProducts = productRepository.findAll();
