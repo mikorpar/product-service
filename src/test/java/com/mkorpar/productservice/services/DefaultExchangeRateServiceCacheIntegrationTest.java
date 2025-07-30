@@ -3,6 +3,7 @@ package com.mkorpar.productservice.services;
 import com.mkorpar.productservice.clients.ExchangeRateApiClient;
 import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
 import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
+import com.mkorpar.productservice.services.impl.DefaultExchangeRateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-class ExchangeRateServiceCacheIntegrationTest {
+class DefaultExchangeRateServiceCacheIntegrationTest {
 
     private static final String CACHE_NAME = "exchangeRates";
     private static final LocalDate DATE = LocalDate.of(2025, 1, 1);
@@ -33,7 +34,7 @@ class ExchangeRateServiceCacheIntegrationTest {
     private ExchangeRateApiClient exchangeRateApiClient;
 
     @Autowired
-    private ExchangeRateService exchangeRateService;
+    private DefaultExchangeRateService exchangeRateService;
 
     @Autowired
     private CacheManager cacheManager;

@@ -32,15 +32,15 @@ import static org.mockito.Mockito.when;
 @Transactional
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class DefaultProductServiceIntegrationTest {
 
     private final BigDecimal EXCHANGE_RATE = BigDecimal.valueOf(1.1);
 
     @Autowired
-    private ProductService productService;
+    private ProductRepository productRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private DefaultProductService productService;
 
     @MockitoBean
     private ExchangeRateApiClient exchangeRateApiClient;

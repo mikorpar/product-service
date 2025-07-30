@@ -1,5 +1,6 @@
 package com.mkorpar.productservice.clients;
 
+import com.mkorpar.productservice.clients.impl.DefaultExchangeRateApiClient;
 import com.mkorpar.productservice.config.ProductServiceConfiguration;
 import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
 import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
@@ -32,14 +33,15 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
 @ActiveProfiles("test")
-@RestClientTest(value = {ExchangeRateApiClient.class, ProductServiceConfiguration.class})
-class ExchangeRateApiClientTest {
+@RestClientTest(value = {DefaultExchangeRateApiClient.class, ProductServiceConfiguration.class})
+class DefaultExchangeRateApiClientTest {
 
     private static final ExchangeRateCurrency CURRENCY = ExchangeRateCurrency.USD;
     private static final LocalDate DATE = LocalDate.of(2025, 1, 1);
 
     @Autowired
-    private ExchangeRateApiClient apiClient;
+    private DefaultExchangeRateApiClient apiClient;
+
     @Autowired
     private MockRestServiceServer server;
 

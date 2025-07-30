@@ -6,6 +6,7 @@ import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
 import com.mkorpar.productservice.exceptions.ExchangeRateCallNotPermittedException;
 import com.mkorpar.productservice.exceptions.ExchangeRateUnavailableException;
 import com.mkorpar.productservice.exceptions.ExchangeRateUnexpectedException;
+import com.mkorpar.productservice.services.impl.DefaultExchangeRateService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ExchangeRateServiceTest {
+class DefaultExchangeRateServiceTest {
 
     private static final LocalDate DATE = LocalDate.of(2025, 1, 1);
 
@@ -28,7 +29,7 @@ class ExchangeRateServiceTest {
     private ExchangeRateApiClient exchangeRateApiClient;
 
     @InjectMocks
-    private ExchangeRateService exchangeRateService;
+    private DefaultExchangeRateService exchangeRateService;
 
 
     @Test
