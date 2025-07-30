@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.response.DefaultResponseCreator;
@@ -30,9 +31,8 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
-@RestClientTest(value = {ExchangeRateApiClient.class, ProductServiceConfiguration.class}, properties = {
-        "exchange.rate.api.url.template=https://api.test.com/exchange-rate/{currency}/{date}"
-})
+@ActiveProfiles("test")
+@RestClientTest(value = {ExchangeRateApiClient.class, ProductServiceConfiguration.class})
 class ExchangeRateApiClientTest {
 
     private static final ExchangeRateCurrency CURRENCY = ExchangeRateCurrency.USD;
