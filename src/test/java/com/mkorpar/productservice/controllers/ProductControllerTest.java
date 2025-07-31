@@ -46,11 +46,11 @@ class ProductControllerTest {
         Mockito.when(productService.createProduct(any())).thenReturn(response);
 
         // Act && Assert
-        mockMvc.perform(post("/api/products")
+        mockMvc.perform(post("/api/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", endsWith("/api/products/PRODUCT001")))
+                .andExpect(header().string("Location", endsWith("/api/v1/products/PRODUCT001")))
                 .andExpect(jsonPath("$.code").value("PRODUCT001"));
     }
 
@@ -65,7 +65,7 @@ class ProductControllerTest {
         Mockito.when(productService.getProduct(eq(code))).thenReturn(response);
 
         // Act && Assert
-        mockMvc.perform(get("/api/products/{code}", code))
+        mockMvc.perform(get("/api/v1/products/{code}", code))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(code))
                 .andExpect(jsonPath("$.name").value("Product A"));
@@ -86,7 +86,7 @@ class ProductControllerTest {
         Mockito.when(productService.getAllProducts()).thenReturn(products);
 
         // Act && Assert
-        mockMvc.perform(get("/api/products"))
+        mockMvc.perform(get("/api/v1/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].code").value("PRODUCT001"))
                 .andExpect(jsonPath("$[1].code").value("PRODUCT002"));
@@ -95,7 +95,7 @@ class ProductControllerTest {
     @Test
     void shouldReturn400_whenProductCodeInPathIsInvalid() throws Exception {
         // Act && Assert
-        mockMvc.perform(get("/api/products/{code}", "INVALID"))
+        mockMvc.perform(get("/api/v1/products/{code}", "INVALID"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -105,7 +105,7 @@ class ProductControllerTest {
         ProductReqDTO invalidReq = new ProductReqDTO("INVALID", "Product A", new BigDecimal("10.00"), true);
 
         // Act && Assert
-        mockMvc.perform(post("/api/products")
+        mockMvc.perform(post("/api/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidReq)))
                 .andExpect(status().isBadRequest());
