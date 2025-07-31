@@ -4,9 +4,7 @@ import com.mkorpar.productservice.clients.impl.DefaultExchangeRateApiClient;
 import com.mkorpar.productservice.config.ProductServiceConfiguration;
 import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
 import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
-import com.mkorpar.productservice.exceptions.ExchangeRateCallNotPermittedException;
 import com.mkorpar.productservice.exceptions.ExchangeRateUnavailableException;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -94,26 +92,6 @@ class DefaultExchangeRateApiClientTest {
         assertThatExceptionOfType(ExchangeRateUnavailableException.class).isThrownBy(() ->
                 apiClient.getExchangeRateAgainstEuro(CURRENCY, DATE)
         ).withMessageStartingWith("Failed to fetch exchange rate for currency");
-    }
-
-    @Test
-    @Disabled
-    void shouldTransitionCircuitBreakerToOpenStateAndThrowException() {
-        // Arrange
-        setupRestServiceServer(withServerError());
-
-        for (int requestNum = 0; requestNum < 6; requestNum++) {
-            try {
-                apiClient.getExchangeRateAgainstEuro(CURRENCY, DATE);
-            } catch (RuntimeException e) {
-                // Expected exception, continue to next request
-            }
-        }
-
-        // Act && Assert
-        assertThatExceptionOfType(ExchangeRateCallNotPermittedException.class).isThrownBy(() ->
-                apiClient.getExchangeRateAgainstEuro(CURRENCY, DATE)
-        );
     }
 
     private String getResponseBody(BigDecimal... exchangeRates) {

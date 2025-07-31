@@ -67,7 +67,7 @@ public class DefaultExchangeRateApiClient implements ExchangeRateApiClient {
     }
 
     private void validateResponseBody(ExchangeRateCurrency currency, LocalDate date, List<ExchangeRateApiResponse> body) {
-        if (body.isEmpty()) {
+        if (body == null || body.isEmpty()) {
             throw new ExchangeRateUnavailableException(
                     String.format("Exchange rate not sent for currency %s on date %s.",  currency, date)
             );
