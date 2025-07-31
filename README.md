@@ -29,10 +29,15 @@ cp flyway.conf.example flyway.conf
 # Optional: only if dev, staging or prod profile is used
 docker compose up
 
-# With default profile (local) - should be used for local development
+# Run with default profile (local) - should be used for local development
 ./mvnw spring-boot:run
 
-# With specific profile
+# Run with specific profile
+## 1. Set environment variables - e.g.
+export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/product_db
+export SPRING_DATASOURCE_USERNAME=user 
+export SPRING_DATASOURCE_PASSWORD=pwd
+## 2. Run the application with the desired profile
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=<profile_name>
 ```
 
