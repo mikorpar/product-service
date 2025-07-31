@@ -3,6 +3,7 @@ package com.mkorpar.productservice.services;
 import com.mkorpar.productservice.clients.ExchangeRateApiClient;
 import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
 import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
+import com.mkorpar.productservice.data.dtos.PageResDTO;
 import com.mkorpar.productservice.data.dtos.ProductReqDTO;
 import com.mkorpar.productservice.data.dtos.ProductResDTO;
 import com.mkorpar.productservice.data.models.Product;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
@@ -138,40 +140,46 @@ class DefaultProductServiceIntegrationTest {
     }
 
     @Test
-    void shouldGetAllProducts() {
-        // Arrange
-        ProductReqDTO secondProductToCreate = createProductReqDTO(
-                "PRODUCT002", "Second product", 149.99, false
-        );
-        ProductReqDTO thirdProductToCreate = createProductReqDTO(
-                "PRODUCT003", "Third product", 199.99, true
-        );
-
-        productService.createProduct(productToCreate);
-        productService.createProduct(secondProductToCreate);
-        productService.createProduct(thirdProductToCreate);
-
+    void shouldReturnEmptyList_WhenNoProductsExist() {
         // Act
-        List<ProductResDTO> allResults = productService.getAllProducts();
+        PageResDTO<ProductResDTO> result = productService.getAllProducts(Pageable.unpaged());
 
         // Assert
-        assertThat(allResults).hasSize(3);
-        assertThat(allResults)
-                .extracting(ProductResDTO::getCode)
-                .containsExactlyInAnyOrder(
-                        productToCreate.getCode(),
-                        secondProductToCreate.getCode(),
-                        thirdProductToCreate.getCode()
-                );
+        assertThat(result.content()).isEmpty();
     }
 
     @Test
-    void shouldReturnEmptyList_WhenNoProductsExist() {
+    void shouldGetAllProducts() {
+        List<String> codesOfProductsToCreate = List.of(productToCreate.getCode(), "PRODUCT002", "PRODUCT003");
+        int expectedProductCount = codesOfProductsToCreate.size();
+        shouldGetProducts(codesOfProductsToCreate, Pageable.unpaged(), expectedProductCount);
+    }
+
+    @Test
+    void shouldGetFirstTwoProducts() {
+        int expectedProductCount = 2;
+        List<String> codesOfProductsToCreate = List.of(productToCreate.getCode(), "PRODUCT002", "PRODUCT003");
+        shouldGetProducts(codesOfProductsToCreate, Pageable.ofSize(expectedProductCount), expectedProductCount);
+    }
+
+    void shouldGetProducts(List<String> codesOfProductsToCreate, Pageable pageable, int expectedSize) {
+        // Arrange
+        codesOfProductsToCreate.stream().map(
+                code -> createProductReqDTO(code, code, 100.0, true)
+        ).forEach(productService::createProduct);
+
         // Act
-        List<ProductResDTO> result = productService.getAllProducts();
+        PageResDTO<ProductResDTO> result = productService.getAllProducts(pageable);
 
         // Assert
-        assertThat(result).isEmpty();
+        assertThat(result.totalElements()).isEqualTo(codesOfProductsToCreate.size());
+        assertThat(result.numberOfElements()).isEqualTo(expectedSize);
+        assertThat(result.content())
+                .extracting(ProductResDTO::getCode)
+                .containsExactlyInAnyOrder(codesOfProductsToCreate.stream()
+                        .limit(expectedSize)
+                        .toArray(String[]::new)
+                );
     }
 
     private ProductReqDTO createProductReqDTO(String code, String name, double price, boolean available) {

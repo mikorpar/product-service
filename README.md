@@ -65,8 +65,8 @@ To create initial DB table(s) and keep DB schema up-to-date, the following comma
 The API is documented using OpenAPI 3.0 specification. Locally, you can access the documentation at
 http://localhost:8080/swagger-ui/index.html.
 
-| Endpoint                  | Method | Description                    | Request body fields                      |
-|---------------------------|--------|--------------------------------|------------------------------------------|
-| `/api/v1/products`        | POST   | Creates new product            | `code`, `name`, `price_eur`, `available` |
-| `/api/v1/products/{code}` | GET    | Gets product by product `code` |                                          |
-| `/api/v1/products`        | GET    | Returns a list of products     |                                          |
+| Endpoint                  | Method | Description                          | Request fields                                |
+|---------------------------|--------|--------------------------------------|-----------------------------------------------|
+| `/api/v1/products`        | POST   | Creates new product                  | Body:`code`,`name`,`price_eur`,`available` |
+| `/api/v1/products/{code}` | GET    | Gets product by product `code`       | Path parameteres:`code`                       |
+| `/api/v1/products`        | GET    | Returns a paginated list of products | Query parameters:`page`,`size`,`sort`         |

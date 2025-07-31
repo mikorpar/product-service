@@ -1,9 +1,9 @@
 package com.mkorpar.productservice.services;
 
+import com.mkorpar.productservice.data.dtos.PageResDTO;
 import com.mkorpar.productservice.data.dtos.ProductReqDTO;
 import com.mkorpar.productservice.data.dtos.ProductResDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
@@ -11,6 +11,6 @@ public interface ProductService {
 
     ProductResDTO getProduct(String code);
 
-    List<ProductResDTO> getAllProducts();
+    PageResDTO<ProductResDTO> getAllProducts(Pageable pageable);
 
 }

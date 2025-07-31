@@ -1,6 +1,7 @@
 package com.mkorpar.productservice.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mkorpar.productservice.data.dtos.PageResDTO;
 import com.mkorpar.productservice.data.dtos.ProductReqDTO;
 import com.mkorpar.productservice.data.dtos.ProductResDTO;
 import com.mkorpar.productservice.services.ProductService;
@@ -24,6 +25,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
+    private static final String ENDPOINT = "/api/v1/products";
+
+    private static final ProductReqDTO productReqDTO = new ProductReqDTO(
+            "PRODUCT001", "Product A", new BigDecimal("10.00"), true
+    );
+    private static final ProductResDTO productResDTO = new ProductResDTO(
+            "PRODUCT001", "Product A", new BigDecimal("10.00"), new BigDecimal("11.00"), false
+    );
+    private static final ProductResDTO secondProductResDTO = new ProductResDTO(
+            "PRODUCT002", "Product B", new BigDecimal("20.00"), new BigDecimal("22.00"), true
+    );
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -36,66 +49,50 @@ class ProductControllerTest {
     @Test
     void shouldCreateProductSuccessfully() throws Exception {
         // Arrange
-        ProductReqDTO request = new ProductReqDTO(
-                "PRODUCT001", "Product A", new BigDecimal("10.00"), true
-        );
-        ProductResDTO response = new ProductResDTO(
-                "PRODUCT001", "Product A", new BigDecimal("10.00"), new BigDecimal("11.00"), true
-        );
-
-        Mockito.when(productService.createProduct(any())).thenReturn(response);
+        Mockito.when(productService.createProduct(any())).thenReturn(productResDTO);
 
         // Act && Assert
-        mockMvc.perform(post("/api/v1/products")
+        mockMvc.perform(post(ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(productReqDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", endsWith("/api/v1/products/PRODUCT001")))
-                .andExpect(jsonPath("$.code").value("PRODUCT001"));
+                .andExpect(header().string("Location", endsWith(ENDPOINT + "/" + productReqDTO.getCode())))
+                .andExpect(jsonPath("$.code").value(productReqDTO.getCode()));
     }
 
     @Test
     void shouldGetProductByCode() throws Exception {
         // Arrange
-        String code = "PRODUCT001";
-        ProductResDTO response = new ProductResDTO(
-                code, "Product A", new BigDecimal("10.00"), new BigDecimal("11.00"), true
-        );
-
-        Mockito.when(productService.getProduct(eq(code))).thenReturn(response);
+        String code = productReqDTO.getCode();
+        Mockito.when(productService.getProduct(eq(code))).thenReturn(productResDTO);
 
         // Act && Assert
-        mockMvc.perform(get("/api/v1/products/{code}", code))
+        mockMvc.perform(get(ENDPOINT + "/{code}", code))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(code))
-                .andExpect(jsonPath("$.name").value("Product A"));
+                .andExpect(jsonPath("$.name").value(productReqDTO.getName()));
     }
 
     @Test
     void shouldGetAllProducts() throws Exception {
         // Arrange
-        List<ProductResDTO> products = List.of(
-                new ProductResDTO(
-                        "PRODUCT001", "Product A", new BigDecimal("10.00"), new BigDecimal("11.00"), false
-                ),
-                new ProductResDTO(
-                        "PRODUCT002", "Product B", new BigDecimal("20.00"), new BigDecimal("22.00"), true
-                )
+        List<ProductResDTO> products = List.of(productResDTO, secondProductResDTO);
+        Mockito.when(productService.getAllProducts(any())).thenReturn(PageResDTO.<ProductResDTO>builder()
+                .content(products)
+                .build()
         );
 
-        Mockito.when(productService.getAllProducts()).thenReturn(products);
-
         // Act && Assert
-        mockMvc.perform(get("/api/v1/products"))
+        mockMvc.perform(get(ENDPOINT))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].code").value("PRODUCT001"))
-                .andExpect(jsonPath("$[1].code").value("PRODUCT002"));
+                .andExpect(jsonPath("$.content.[0].code").value(products.getFirst().getCode()))
+                .andExpect(jsonPath("$.content.[1].code").value(products.getLast().getCode()));
     }
 
     @Test
     void shouldReturn400_whenProductCodeInPathIsInvalid() throws Exception {
         // Act && Assert
-        mockMvc.perform(get("/api/v1/products/{code}", "INVALID"))
+        mockMvc.perform(get(ENDPOINT + "/{code}", "INVALID"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -105,7 +102,7 @@ class ProductControllerTest {
         ProductReqDTO invalidReq = new ProductReqDTO("INVALID", "Product A", new BigDecimal("10.00"), true);
 
         // Act && Assert
-        mockMvc.perform(post("/api/v1/products")
+        mockMvc.perform(post(ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidReq)))
                 .andExpect(status().isBadRequest());

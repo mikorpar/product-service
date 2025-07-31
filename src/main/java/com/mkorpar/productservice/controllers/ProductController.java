@@ -1,11 +1,14 @@
 package com.mkorpar.productservice.controllers;
 
 import com.mkorpar.productservice.constants.SwaggerConstants;
+import com.mkorpar.productservice.data.dtos.PageResDTO;
 import com.mkorpar.productservice.data.dtos.ProductReqDTO;
 import com.mkorpar.productservice.data.dtos.ProductResDTO;
 import com.mkorpar.productservice.data.rest.ErrorData;
 import com.mkorpar.productservice.data.rest.ValidationErrorDataList;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +18,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +28,6 @@ import com.mkorpar.productservice.services.ProductService;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @Validated
 @RestController
@@ -91,13 +95,32 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProduct(code));
     }
 
-    @Operation(summary = "Get all products", description = "Retrieves a list of all products.")
+    @Operation(summary = "Get product list", description = "Retrieves a paginated list of products.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerConstants.OK, description = "Successfully retrieved list of products."),
+            @ApiResponse(responseCode = SwaggerConstants.OK, description = "Successfully retrieved paginated list of products."),
+    })
+    @Parameters({
+            @Parameter(
+                    name = "page",
+                    description = "Page number (0-based)",
+                    example = "0",
+                    schema = @Schema(defaultValue = "0")
+            ),
+            @Parameter(
+                    name = "size",
+                    description = "Number of items per page",
+                    example = "20",
+                    schema = @Schema(defaultValue = "20")
+            ),
+            @Parameter(
+                    name = "sort",
+                    description = "Sorting criteria: property(,asc|desc)",
+                    example = "code,asc"
+            )
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ProductResDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<PageResDTO<ProductResDTO>> getAllProducts(@ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllProducts(pageable));
     }
 
 }
