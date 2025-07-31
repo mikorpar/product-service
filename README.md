@@ -26,18 +26,20 @@ cp flyway.conf.example flyway.conf
 ## How to run
 
 ```bash
-# Optional: only if dev, staging or prod profile is used
+# Optional - start PostgreSQL DB container
+## Needed only if dev, staging or prod profile is used locally
 docker compose up
 
-# Run with default profile (local) - should be used for local development
+# Run Spring service with default profile (local) - should be used for local development
 ./mvnw spring-boot:run
 
-# Run with specific profile
-## 1. Set environment variables - e.g.
+# Run Spring service with specific profile
+## 1. Set environment variables
+### Needed only if dev, staging or prod profile is used
 export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/product_db
 export SPRING_DATASOURCE_USERNAME=user 
 export SPRING_DATASOURCE_PASSWORD=pwd
-## 2. Run the application with the desired profile
+## 2. Run the application with the desired profile_name
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=<profile_name>
 ```
 
@@ -53,7 +55,7 @@ export SPRING_DATASOURCE_PASSWORD=pwd
 
 **Note**  
 When `dev`, `staging` or `prod` profile is used, DB migrations are not executed on startup.  
-To create initial DB table(s) and keep DB schema up-to-date, the following command needs to be executed.
+To create DB table(s) and keep DB schema up-to-date, the following command needs to be executed.
 
 ```bash
 # Run DB migrations
@@ -68,10 +70,10 @@ To create initial DB table(s) and keep DB schema up-to-date, the following comma
 
 ## API
 The API is documented using OpenAPI 3.0 specification. Locally, you can access the documentation at
-http://localhost:8080/swagger-ui/index.html.
+<a href="http://localhost:8080/swagger-ui/index.html" target="_blank">http://localhost:8080/swagger-ui/index.html</a>.
 
-| Endpoint                  | Method | Description                          | Request fields                                |
-|---------------------------|--------|--------------------------------------|-----------------------------------------------|
-| `/api/v1/products`        | POST   | Creates new product                  | Body:`code`,`name`,`price_eur`,`available` |
-| `/api/v1/products/{code}` | GET    | Gets product by product `code`       | Path parameteres:`code`                       |
-| `/api/v1/products`        | GET    | Returns a paginated list of products | Query parameters:`page`,`size`,`sort`         |
+| Endpoint                  | Method | Description                          | Request fields                              |
+|---------------------------|--------|--------------------------------------|---------------------------------------------|
+| `/api/v1/products`        | POST   | Creates new product                  | Body: `code`,`name`,`price_eur`,`available` |
+| `/api/v1/products/{code}` | GET    | Gets product by product `code`       | Path parameteres: `code`                    |
+| `/api/v1/products`        | GET    | Returns a paginated list of products | Query parameters: `page`,`size`,`sort`      |
