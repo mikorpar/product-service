@@ -1,6 +1,7 @@
 package com.mkorpar.productservice.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mkorpar.productservice.security.SecurityConfig;
 import com.mkorpar.productservice.data.dtos.PageResDTO;
 import com.mkorpar.productservice.data.dtos.ProductReqDTO;
 import com.mkorpar.productservice.data.dtos.ProductResDTO;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,9 +21,11 @@ import java.util.List;
 import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Import(SecurityConfig.class)
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
@@ -53,11 +57,34 @@ class ProductControllerTest {
 
         // Act && Assert
         mockMvc.perform(post(ENDPOINT)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productReqDTO)))
+                .with(jwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productReqDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", endsWith(ENDPOINT + "/" + productReqDTO.getCode())))
                 .andExpect(jsonPath("$.code").value(productReqDTO.getCode()));
+    }
+
+    @Test
+    void shouldReturn400_whenRequestBodyIsInvalid() throws Exception {
+        // Arrange
+        ProductReqDTO invalidReq = new ProductReqDTO("INVALID", "Product A", new BigDecimal("10.00"), true);
+
+        // Act && Assert
+        mockMvc.perform(post(ENDPOINT)
+                        .with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidReq)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn403_whenAuthTokenIsNotProvided() throws Exception {
+        // Act && Assert
+        mockMvc.perform(post(ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productReqDTO)))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -74,6 +101,13 @@ class ProductControllerTest {
     }
 
     @Test
+    void shouldReturn400_whenProductCodeInPathIsInvalid() throws Exception {
+        // Act && Assert
+        mockMvc.perform(get(ENDPOINT + "/{code}", "INVALID"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void shouldGetAllProducts() throws Exception {
         // Arrange
         List<ProductResDTO> products = List.of(productResDTO, secondProductResDTO);
@@ -87,25 +121,6 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.[0].code").value(products.getFirst().getCode()))
                 .andExpect(jsonPath("$.content.[1].code").value(products.getLast().getCode()));
-    }
-
-    @Test
-    void shouldReturn400_whenProductCodeInPathIsInvalid() throws Exception {
-        // Act && Assert
-        mockMvc.perform(get(ENDPOINT + "/{code}", "INVALID"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void shouldReturn400_whenRequestBodyIsInvalid() throws Exception {
-        // Arrange
-        ProductReqDTO invalidReq = new ProductReqDTO("INVALID", "Product A", new BigDecimal("10.00"), true);
-
-        // Act && Assert
-        mockMvc.perform(post(ENDPOINT)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidReq)))
-                .andExpect(status().isBadRequest());
     }
 
 }

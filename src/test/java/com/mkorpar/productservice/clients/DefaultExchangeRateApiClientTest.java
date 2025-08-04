@@ -2,7 +2,7 @@ package com.mkorpar.productservice.clients;
 
 import com.mkorpar.productservice.clients.impl.DefaultExchangeRateApiClient;
 import com.mkorpar.productservice.config.ProductServiceConfiguration;
-import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
+import com.mkorpar.productservice.clients.data.ExchangeRateApiResponse;
 import com.mkorpar.productservice.exceptions.ExchangeRateUnavailableException;
 import com.mkorpar.productservice.utils.MockServerTest;
 import org.junit.jupiter.api.Test;
