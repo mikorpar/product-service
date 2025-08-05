@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -30,6 +31,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 import static com.mkorpar.productservice.constants.BaseConstants.PRODUCT_CONTROLLER_URL_PATH_MAPPING;
+import static com.mkorpar.productservice.constants.SwaggerConstants.SECURITY_SCHEMA_NAME;
 
 @Validated
 @RestController
@@ -40,7 +42,11 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Operation(summary = "Create a new product", description = "Creates a new product.")
+    @Operation(
+            summary = "Create a new product",
+            description = "Creates a new product.",
+            security = @SecurityRequirement(name = SECURITY_SCHEMA_NAME)
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerConstants.CREATED, description = "Product created successfully."),
             @ApiResponse(
@@ -50,6 +56,14 @@ public class ProductController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ValidationErrorDataList.class)
                     )
+            ),
+            @ApiResponse(
+                    responseCode = SwaggerConstants.UNAUTHORIZED,
+                    description = "Invalid Bearer authentication token"
+            ),
+            @ApiResponse(
+                    responseCode = SwaggerConstants.FORBIDDEN,
+                    description = "Bearer authentication token not provided."
             ),
             @ApiResponse(
                     responseCode = SwaggerConstants.CONFLICT,
