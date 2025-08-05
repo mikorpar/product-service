@@ -6,6 +6,8 @@ A simple product web service built with Java 21 and Spring Boot 3.
 
 - Java 21 or higher
 - Docker
+- Docker Compose
+- openssl
 
 ## Setup
 
