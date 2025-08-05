@@ -41,10 +41,8 @@ class DefaultProductServiceIntegrationTest {
 
     @Autowired
     private ProductRepository productRepository;
-
     @Autowired
     private DefaultProductService productService;
-
     @MockitoBean
     private ExchangeRateApiClient exchangeRateApiClient;
 

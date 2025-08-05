@@ -30,14 +30,12 @@ class DefaultExchangeRateServiceCacheIntegrationTest {
 
     private static final LocalDate DATE = LocalDate.of(2025, 1, 1);
 
-    @MockitoBean
-    private ExchangeRateApiClient exchangeRateApiClient;
-
     @Autowired
     private DefaultExchangeRateService exchangeRateService;
-
     @Autowired
     private CacheManager cacheManager;
+    @MockitoBean
+    private ExchangeRateApiClient exchangeRateApiClient;
 
     @BeforeEach
     void clearCache() {

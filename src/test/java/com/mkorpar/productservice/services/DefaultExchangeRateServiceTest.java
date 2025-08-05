@@ -27,10 +27,8 @@ class DefaultExchangeRateServiceTest {
 
     @Mock
     private ExchangeRateApiClient exchangeRateApiClient;
-
     @InjectMocks
     private DefaultExchangeRateService exchangeRateService;
-
 
     @Test
     void shouldReturnExchangeRate_WhenApiCallSucceeds() {
