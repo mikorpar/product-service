@@ -90,12 +90,12 @@ To create DB table(s) and keep DB schema up-to-date, the following command needs
 The API is documented using OpenAPI 3.0 specification. Documentation is accessible locally at
 <a href="http://localhost:8080/swagger-ui/index.html" target="_blank">http://localhost:8080/swagger-ui/index.html</a>.
 
-| Endpoint                  | Method | Description                          | Authentication                                                                                                | Request fields                                |
-|---------------------------|--------|--------------------------------------|---------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
-| `/api/v1/products`        | POST   | Creates new product                  | Bearer token - by default, when `noauth` profile is inactive <br> None - when `noauth` profile is active      | Body: `code`,`name`,`price_eur`,`available`   |
-| `/api/v1/products/{code}` | GET    | Gets product by product `code`       | None                                                                                                          | Path parameteres: `code`                      |
-| `/api/v1/products`        | GET    | Returns a paginated list of products | None                                                                                                          | Query parameters: `page`,`size`,`sort`        |
-| `/oauth2/token`           | POST   | Returns access token                 | None                                                                                                          | Body: `grant_type`  Headers: `Authorization`  |
+| Endpoint                  | Method | Description                          | Authentication                                                                                                | Request fields                                   |
+|---------------------------|--------|--------------------------------------|---------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `/api/v1/products`        | POST   | Creates new product                  | Bearer token - by default, when `noauth` profile is inactive <br> None - when `noauth` profile is active      | Body: `code`,`name`,`price_eur`,`available`      |
+| `/api/v1/products/{code}` | GET    | Gets product by product `code`       | None                                                                                                          | Path parameteres: `code`                         |
+| `/api/v1/products`        | GET    | Returns a paginated list of products | None                                                                                                          | Query parameters: `page`,`size`,`sort`           |
+| `/oauth2/token`           | POST   | Returns access token                 | None                                                                                                          | Body: `grant_type`, `client_id`, `client_secret` |
 
 ### Authentication
 
@@ -108,13 +108,12 @@ Default client can be modified and new ones can be created by modifying `applica
 
 **How to get the access token**
 
-To get access token, POST `/oauth2/token` request needs to be sent.  
-**Basic authentication** is used as authentication method.  
-**client_id** and **client_secret** need to be provided in the `Authorization` header in **base64** encoded format.
+To get the access token, **POST** `/oauth2/token` request needs to be sent.
 ```bash
 # Example with default OAuth test-client
 curl --location 'http://localhost:8080/oauth2/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---header 'Authorization: Basic dGVzdC1jbGllbnQ6dGVzdC1zZWNyZXQ=' \
---data-urlencode 'grant_type=client_credentials'
+--data-urlencode 'grant_type=client_credentials' \
+--data-urlencode 'client_id=test-client' \
+--data-urlencode 'client_secret=test-secret'
 ```
