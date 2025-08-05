@@ -1,6 +1,6 @@
-# Product microservice - REST API
+# Product web service - REST API
 
-A simple product microservice built with Java 21 and Spring Boot 3.
+A simple product web service built with Java 21 and Spring Boot 3.
 
 ## Requirements
 
