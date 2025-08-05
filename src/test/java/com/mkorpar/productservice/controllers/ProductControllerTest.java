@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.mkorpar.productservice.constants.BaseConstants.PRODUCT_CONTROLLER_URL_PATH_MAPPING;
 import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
-    private static final String ENDPOINT = "/api/v1/products";
+    private static final String ENDPOINT = PRODUCT_CONTROLLER_URL_PATH_MAPPING;
 
     private static final ProductReqDTO productReqDTO = new ProductReqDTO(
             "PRODUCT001", "Product A", new BigDecimal("10.00"), true

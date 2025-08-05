@@ -29,9 +29,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+import static com.mkorpar.productservice.constants.BaseConstants.PRODUCT_CONTROLLER_URL_PATH_MAPPING;
+
 @Validated
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping(PRODUCT_CONTROLLER_URL_PATH_MAPPING)
 @RequiredArgsConstructor
 @Tag(name = "Products", description = "Product API")
 public class ProductController {

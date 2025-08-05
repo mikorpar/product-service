@@ -22,6 +22,8 @@ import org.springframework.web.client.RestClient;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.mkorpar.productservice.constants.BaseConstants.API_CLIENT_CIRCUIT_BREAKER_NAME;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class DefaultExchangeRateApiClient implements ExchangeRateApiClient {
     private String urlTemplate;
 
     @Override
-    @CircuitBreaker(name = "exchangeRateApiClient", fallbackMethod = "getExchangeRateAgainstEuroFallback")
+    @CircuitBreaker(name = API_CLIENT_CIRCUIT_BREAKER_NAME, fallbackMethod = "getExchangeRateAgainstEuroFallback")
     public ExchangeRateApiResponse getExchangeRateAgainstEuro(ExchangeRateCurrency currency, LocalDate date) {
         ResponseEntity<List<ExchangeRateApiResponse>> response = sendRequest(urlTemplate, currency, date);
         validateStatusCode(response.getStatusCode(), currency, date);

@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.time.LocalDate;
 
+import static com.mkorpar.productservice.constants.BaseConstants.API_CLIENT_CIRCUIT_BREAKER_NAME;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
@@ -41,7 +42,7 @@ public class DefaultExchangeRateApiClientCircuitBreakerTest extends MockServerTe
 
     @BeforeEach
     void getCircuitBreaker() {
-        circuitBreaker = circuitBreakerRegistry.circuitBreaker("exchangeRateApiClient");
+        circuitBreaker = circuitBreakerRegistry.circuitBreaker(API_CLIENT_CIRCUIT_BREAKER_NAME);
         circuitBreaker.reset();
     }
 

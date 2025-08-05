@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static com.mkorpar.productservice.constants.BaseConstants.EXCHANGE_RATE_CACHE_NAME;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,7 +28,6 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class DefaultExchangeRateServiceCacheIntegrationTest {
 
-    private static final String CACHE_NAME = "exchangeRates";
     private static final LocalDate DATE = LocalDate.of(2025, 1, 1);
 
     @MockitoBean
@@ -41,7 +41,7 @@ class DefaultExchangeRateServiceCacheIntegrationTest {
 
     @BeforeEach
     void clearCache() {
-        Optional.ofNullable(cacheManager.getCache(CACHE_NAME))
+        Optional.ofNullable(cacheManager.getCache(EXCHANGE_RATE_CACHE_NAME))
                 .ifPresent(Cache::clear);
     }
 
