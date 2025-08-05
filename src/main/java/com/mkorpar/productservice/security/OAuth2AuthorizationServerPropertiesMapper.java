@@ -21,8 +21,8 @@ import org.springframework.security.oauth2.server.authorization.settings.TokenSe
 
 /**
  * Copied from Spring Framework (package-private in original).
- * Source: org.springframework.boot.autoconfigure.security.oauth2.server.servlet.OAuth2AuthorizationServerPropertiesMapper
- *
+ * Source: {@link org.springframework.boot.autoconfigure.security.oauth2.server.servlet.OAuth2AuthorizationServerPropertiesMapper}
+ * <br>
  * Maps {@link OAuth2AuthorizationServerProperties} to Authorization Server types.
  *
  * @author Steve Riesenberg
