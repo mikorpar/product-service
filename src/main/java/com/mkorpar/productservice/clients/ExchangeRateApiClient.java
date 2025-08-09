@@ -1,7 +1,7 @@
 package com.mkorpar.productservice.clients;
 
 import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
-import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
+import com.mkorpar.productservice.clients.data.ExchangeRateApiResponse;
 
 import java.time.LocalDate;
 

@@ -94,7 +94,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<ErrorData> response = exceptionHandler.handleProductNotFoundException(exception);
 
         // Assert
-        assertCustomExcepctionHandlerResponse(response, exception, HttpStatus.NOT_FOUND);
+        assertCustomExceptionHandlerResponse(response, exception, HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -106,7 +106,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<ErrorData> response = exceptionHandler.handleDuplicateProductCodeException(exception);
 
         // Assert
-        assertCustomExcepctionHandlerResponse(response, exception, HttpStatus.CONFLICT);
+        assertCustomExceptionHandlerResponse(response, exception, HttpStatus.CONFLICT);
     }
 
     private void assertViolationErrorResponse(ResponseEntity<ValidationErrorDataList> response, String fieldName, String message) {
@@ -122,7 +122,7 @@ class GlobalExceptionHandlerTest {
 
     }
 
-    void assertCustomExcepctionHandlerResponse(ResponseEntity<ErrorData> response, RuntimeException e, HttpStatusCode status) {
+    void assertCustomExceptionHandlerResponse(ResponseEntity<ErrorData> response, RuntimeException e, HttpStatusCode status) {
         assertThat(response.getStatusCode()).isEqualTo(status);
         assertThat(response.getBody()).isNotNull()
                 .satisfies(body -> {

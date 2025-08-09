@@ -24,7 +24,6 @@ class ProductPricePropertyMapTest {
 
     @Mock
     private ExchangeRateService exchangeRateService;
-
     @InjectMocks
     private ProductPricePropertyMap productPricePropertyMap;
     

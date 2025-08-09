@@ -2,7 +2,7 @@ package com.mkorpar.productservice.services;
 
 import com.mkorpar.productservice.clients.ExchangeRateApiClient;
 import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
-import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
+import com.mkorpar.productservice.clients.data.ExchangeRateApiResponse;
 import com.mkorpar.productservice.services.impl.DefaultExchangeRateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static com.mkorpar.productservice.constants.BaseConstants.EXCHANGE_RATE_CACHE_NAME;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,21 +28,18 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class DefaultExchangeRateServiceCacheIntegrationTest {
 
-    private static final String CACHE_NAME = "exchangeRates";
     private static final LocalDate DATE = LocalDate.of(2025, 1, 1);
-
-    @MockitoBean
-    private ExchangeRateApiClient exchangeRateApiClient;
 
     @Autowired
     private DefaultExchangeRateService exchangeRateService;
-
     @Autowired
     private CacheManager cacheManager;
+    @MockitoBean
+    private ExchangeRateApiClient exchangeRateApiClient;
 
     @BeforeEach
     void clearCache() {
-        Optional.ofNullable(cacheManager.getCache(CACHE_NAME))
+        Optional.ofNullable(cacheManager.getCache(EXCHANGE_RATE_CACHE_NAME))
                 .ifPresent(Cache::clear);
     }
 

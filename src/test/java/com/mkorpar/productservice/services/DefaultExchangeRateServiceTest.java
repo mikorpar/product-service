@@ -2,7 +2,7 @@ package com.mkorpar.productservice.services;
 
 import com.mkorpar.productservice.clients.ExchangeRateApiClient;
 import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
-import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
+import com.mkorpar.productservice.clients.data.ExchangeRateApiResponse;
 import com.mkorpar.productservice.exceptions.ExchangeRateCallNotPermittedException;
 import com.mkorpar.productservice.exceptions.ExchangeRateUnavailableException;
 import com.mkorpar.productservice.exceptions.ExchangeRateUnexpectedException;
@@ -27,10 +27,8 @@ class DefaultExchangeRateServiceTest {
 
     @Mock
     private ExchangeRateApiClient exchangeRateApiClient;
-
     @InjectMocks
     private DefaultExchangeRateService exchangeRateService;
-
 
     @Test
     void shouldReturnExchangeRate_WhenApiCallSucceeds() {

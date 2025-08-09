@@ -8,13 +8,17 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+import static com.mkorpar.productservice.data.models.Product.PRODUCT_DB_TABLE_NAME;
+
 @Data
 @Entity
-@Table(name = "products")
+@Table(name = PRODUCT_DB_TABLE_NAME)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
+
+    public static final String PRODUCT_DB_TABLE_NAME = "products";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

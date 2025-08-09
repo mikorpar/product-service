@@ -35,3 +35,6 @@ build/
 
 ### Flyway ###
 flyway.conf
+
+# JWT signature key store
+src/main/resources/keystore.p12

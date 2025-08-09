@@ -16,8 +16,8 @@ public final class PropertyNamingStrategyUtils {
     }
 
     /**
-     * @param qualifier the fully qualified {@link PropertyNamingStrategies.NamingBase} child class name or the field name
-     *                 corresponding to {@link PropertyNamingStrategy} constant in {@link PropertyNamingStrategies} class
+     * @param qualifier the fully qualified {@link PropertyNamingStrategies.NamingBase} child class name or the
+     * field name corresponding to {@link PropertyNamingStrategy} constant in {@link PropertyNamingStrategies} class
      */
     public static PropertyNamingStrategies.NamingBase getStrategy(String qualifier) {
         if (qualifier == null) {
