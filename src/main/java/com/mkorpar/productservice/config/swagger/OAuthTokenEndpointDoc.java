@@ -22,6 +22,16 @@ import static com.mkorpar.productservice.constants.SwaggerConstants.*;
 @Profile("!noauth & !external-auth-server")
 public class OAuthTokenEndpointDoc {
 
+    private static final String ACCESS_TOKEN_EXAMPLE = """
+            eyJraWQiOiJqdHctc2lnbmF0dXJlLXJzYS1rZXkiLCJhbGciOiJSUzI1NiJ9.\
+            eyJzdWIiOiJ0ZXN0LWNsaWVudCIsImF1ZCI6InRlc3QtY2xpZW50IiwibmJmIjoxNzU0NDI0MTEzLCJpc3MiOiJodHRwOi8vbG9jYWxob3N\
+            0OjgwODAiLCJleHAiOjE3NTQ0MjQ0MTMsImlhdCI6MTc1NDQyNDExMywianRpIjoiYWIzMTZjYTktZTk3OS00YTk1LWI0ZGYtYjE4MTc1YT\
+            g3NGQxIn0.O_cX3S5dQhn1SuJAuATu9H4ktbjNK6TqZc95TY1UFVGLd3ZrK4dtcS2SjnkOEMdw7AgvyRn_gmYWFjA2BcIb51Jm171BBmAzb\
+            w1g4VQNkBpwoNNb1utaKAlbKr3aIrGK10H8GwQU6VGIvbFlXdKp3TE3pWQe1O7zGnGP4BkUPDoZz8GfoE4ZBKCwNaCgtOxjeoAHOG6kR1Ue\
+            TuAyeqLWxMnrgKzskCXiLG41Gx6igsxrwrrIAAAGP5AycJHpa3-NM1CfXUuDlmDG6n1M8mMLqNZwg8pFUAVieXb0hBVq3japjTQz70OQeSB\
+            lF4o1dJAXqSGJCTbSddpfdOepvLvJMg
+            """;
+
     @Bean
     public OpenAPI customOpenAPIConfig() {
         Operation postOperation = new Operation()
@@ -40,6 +50,7 @@ public class OAuthTokenEndpointDoc {
     }
 
     private RequestBody getRequestBody() {
+        @SuppressWarnings("java:S3740")
         Map<String, Schema> properties = new LinkedHashMap<>();
         properties.put(GRANT_TYPE, new StringSchema()
                 ._default("client_credentials")
@@ -62,10 +73,11 @@ public class OAuthTokenEndpointDoc {
     }
 
     private ApiResponses getResponses() {
+        @SuppressWarnings("java:S3740")
         Map<String, Schema> tokenProperties = new LinkedHashMap<>();
         tokenProperties.put(ACCESS_TOKEN, new StringSchema()
                 .description("JWT access token")
-                .example(getAccessToken()));
+                .example(ACCESS_TOKEN_EXAMPLE));
         tokenProperties.put(TOKEN_TYPE, new StringSchema()
                 .description("Type of token issued")
                 .example("Bearer"));
@@ -83,17 +95,6 @@ public class OAuthTokenEndpointDoc {
                                 new MediaType().schema(tokenResponseSchema))))
                 .addApiResponse(BAD_REQUEST, new ApiResponse().description("Invalid request"))
                 .addApiResponse(UNAUTHORIZED, new ApiResponse().description("Invalid client credentials"));
-    }
-
-    private String getAccessToken() {
-        return """
-    eyJraWQiOiJqdHctc2lnbmF0dXJlLXJzYS1rZXkiLCJhbGciOiJSUzI1NiJ9.\
-    eyJzdWIiOiJ0ZXN0LWNsaWVudCIsImF1ZCI6InRlc3QtY2xpZW50IiwibmJmIjoxNzU0NDI0MTEzLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODA\
-    iLCJleHAiOjE3NTQ0MjQ0MTMsImlhdCI6MTc1NDQyNDExMywianRpIjoiYWIzMTZjYTktZTk3OS00YTk1LWI0ZGYtYjE4MTc1YTg3NGQxIn0.\
-    O_cX3S5dQhn1SuJAuATu9H4ktbjNK6TqZc95TY1UFVGLd3ZrK4dtcS2SjnkOEMdw7AgvyRn_gmYWFjA2BcIb51Jm171BBmAzbw1g4VQNkBpwoNNb1ut\
-    aKAlbKr3aIrGK10H8GwQU6VGIvbFlXdKp3TE3pWQe1O7zGnGP4BkUPDoZz8GfoE4ZBKCwNaCgtOxjeoAHOG6kR1UeTuAyeqLWxMnrgKzskCXiLG41Gx\
-    6igsxrwrrIAAAGP5AycJHpa3-NM1CfXUuDlmDG6n1M8mMLqNZwg8pFUAVieXb0hBVq3japjTQz70OQeSBlF4o1dJAXqSGJCTbSddpfdOepvLvJMg
-    """;
     }
 
 }

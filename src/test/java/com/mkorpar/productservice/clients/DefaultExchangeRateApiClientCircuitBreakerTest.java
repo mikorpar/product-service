@@ -28,7 +28,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockRestServiceServer
-public class DefaultExchangeRateApiClientCircuitBreakerTest extends MockServerTest {
+class DefaultExchangeRateApiClientCircuitBreakerTest extends MockServerTest {
 
     private static final ExchangeRateCurrency CURRENCY = ExchangeRateCurrency.USD;
     private static final LocalDate DATE = LocalDate.of(2025, 1, 1);

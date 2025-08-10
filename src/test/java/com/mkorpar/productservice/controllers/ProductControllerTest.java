@@ -21,7 +21,6 @@ import java.util.List;
 import static com.mkorpar.productservice.constants.BaseConstants.PRODUCT_CONTROLLER_URL_PATH_MAPPING;
 import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -90,7 +89,7 @@ class ProductControllerTest {
     void shouldGetProductByCode() throws Exception {
         // Arrange
         String code = productReqDTO.getCode();
-        Mockito.when(productService.getProduct(eq(code))).thenReturn(productResDTO);
+        Mockito.when(productService.getProduct(code)).thenReturn(productResDTO);
 
         // Act && Assert
         mockMvc.perform(get(ENDPOINT + "/{code}", code))

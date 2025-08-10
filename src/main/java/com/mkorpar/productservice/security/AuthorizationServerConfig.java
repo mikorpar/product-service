@@ -69,7 +69,7 @@ public class AuthorizationServerConfig {
         return http
                 .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
                 .with(authorizationServerConfigurer, Customizer.withDefaults())
-                .authorizeHttpRequests((authorize) ->
+                .authorizeHttpRequests(authorize ->
                         authorize.anyRequest().authenticated()
                 ).build();
     }

@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DefaultProductServiceIntegrationTest {
 
-    private final BigDecimal EXCHANGE_RATE = BigDecimal.valueOf(1.1);
+    private static final BigDecimal EXCHANGE_RATE = BigDecimal.valueOf(1.1);
 
     @Autowired
     private ProductRepository productRepository;
