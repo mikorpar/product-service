@@ -1,0 +1,51 @@
+name: Create keystore with JWT signature requirements
+description: "Crates keystore containing RSA private key and certificate for JWT signature generation and validation"
+
+inputs:
+  cert-validity:
+    description: "Certificate validity time in days"
+    required: false
+    default: '365'
+  cert-cn:
+    description: 'Certificate CN'
+    required: false
+    default: 'ProductService'
+  keystore:
+    description: 'Name of the keystore file to be created'
+    required: false
+    default: 'keystore'
+  keystore-alias:
+    description: 'Keystore entry name containing private key and certificate'
+    required: false
+    default: 'jwt_sign_key'
+
+runs:
+  using: composite
+  steps:
+    - name: Validate keystore pwd
+      shell: bash
+      run: |
+        if [ -z "${JWT_KEYSTORE_PWD}" ]; then
+          echo "Error: JWT_KEYSTORE_PWD is not set. Please pass it via env in the workflow."
+          exit 1
+        fi
+
+    - name: Create private key and certificate for JWT signature
+      shell: bash
+      run: |
+        openssl req -x509 \
+        -newkey rsa:2048 \
+        -keyout src/main/resources/key.pem \
+        -out src/main/resources/cert.pem \
+        -days ${{ inputs.cert-validity }} \
+        -nodes \
+        -subj "/CN=${{ inputs.cert-cn }}"
+        
+        openssl pkcs12 -export \
+        -inkey src/main/resources/key.pem \
+        -in src/main/resources/cert.pem \
+        -out src/main/resources/${{ inputs.keystore }}.p12 \
+        -name ${{ inputs.keystore-alias }} \
+        -passout pass:$JWT_KEYSTORE_PWD
+        
+        rm src/main/resources/cert.pem src/main/resources/key.pem

@@ -8,11 +8,11 @@ import com.mkorpar.productservice.data.rest.ErrorData;
 import com.mkorpar.productservice.data.rest.ValidationErrorDataList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -29,16 +29,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+import static com.mkorpar.productservice.constants.BaseConstants.PRODUCT_CONTROLLER_URL_PATH_MAPPING;
+import static com.mkorpar.productservice.constants.SwaggerConstants.SECURITY_SCHEMA_NAME;
+
 @Validated
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping(PRODUCT_CONTROLLER_URL_PATH_MAPPING)
 @RequiredArgsConstructor
 @Tag(name = "Products", description = "Product API")
 public class ProductController {
 
     private final ProductService productService;
 
-    @Operation(summary = "Create a new product", description = "Creates a new product.")
+    @Operation(
+            summary = "Create a new product",
+            description = "Creates a new product.",
+            security = @SecurityRequirement(name = SECURITY_SCHEMA_NAME)
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerConstants.CREATED, description = "Product created successfully."),
             @ApiResponse(
@@ -48,6 +55,14 @@ public class ProductController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ValidationErrorDataList.class)
                     )
+            ),
+            @ApiResponse(
+                    responseCode = SwaggerConstants.UNAUTHORIZED,
+                    description = "Invalid Bearer authentication token"
+            ),
+            @ApiResponse(
+                    responseCode = SwaggerConstants.FORBIDDEN,
+                    description = "Bearer authentication token not provided."
             ),
             @ApiResponse(
                     responseCode = SwaggerConstants.CONFLICT,
@@ -99,25 +114,23 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = SwaggerConstants.OK, description = "Successfully retrieved paginated list of products."),
     })
-    @Parameters({
-            @Parameter(
-                    name = "page",
-                    description = "Page number (0-based)",
-                    example = "0",
-                    schema = @Schema(defaultValue = "0")
-            ),
-            @Parameter(
-                    name = "size",
-                    description = "Number of items per page",
-                    example = "20",
-                    schema = @Schema(defaultValue = "20")
-            ),
-            @Parameter(
-                    name = "sort",
-                    description = "Sorting criteria: property(,asc|desc)",
-                    example = "code,asc"
-            )
-    })
+    @Parameter(
+            name = "page",
+            description = "Page number (0-based)",
+            example = "0",
+            schema = @Schema(defaultValue = "0")
+    )
+    @Parameter(
+            name = "size",
+            description = "Number of items per page",
+            example = "20",
+            schema = @Schema(defaultValue = "20")
+    )
+    @Parameter(
+            name = "sort",
+            description = "Sorting criteria: property(,asc|desc)",
+            example = "code,asc"
+    )
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PageResDTO<ProductResDTO>> getAllProducts(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(productService.getAllProducts(pageable));

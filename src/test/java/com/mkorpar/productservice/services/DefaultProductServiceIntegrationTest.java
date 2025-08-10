@@ -2,7 +2,7 @@ package com.mkorpar.productservice.services;
 
 import com.mkorpar.productservice.clients.ExchangeRateApiClient;
 import com.mkorpar.productservice.clients.enums.ExchangeRateCurrency;
-import com.mkorpar.productservice.data.api.ExchangeRateApiResponse;
+import com.mkorpar.productservice.clients.data.ExchangeRateApiResponse;
 import com.mkorpar.productservice.data.dtos.PageResDTO;
 import com.mkorpar.productservice.data.dtos.ProductReqDTO;
 import com.mkorpar.productservice.data.dtos.ProductResDTO;
@@ -37,14 +37,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DefaultProductServiceIntegrationTest {
 
-    private final BigDecimal EXCHANGE_RATE = BigDecimal.valueOf(1.1);
+    private static final BigDecimal EXCHANGE_RATE = BigDecimal.valueOf(1.1);
 
     @Autowired
     private ProductRepository productRepository;
-
     @Autowired
     private DefaultProductService productService;
-
     @MockitoBean
     private ExchangeRateApiClient exchangeRateApiClient;
 
