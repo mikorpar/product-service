@@ -4,11 +4,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  SONAR_HOST_URL: https://sonarcloud.io
-  SONAR_ORGANISATION: mikorpar
-  SONAR_PROJECT_KEY: mikorpar_product-service
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
@@ -69,7 +64,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >-
           ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-          -Dsonar.host.url=${{ env.SONAR_HOST_URL }}
-          -Dsonar.organization=${{ env.SONAR_ORGANISATION }}
-          -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+          -Dsonar.host.url=${{ vars.SONAR_HOST_URL }}
+          -Dsonar.organization=${{ vars.SONAR_ORGANISATION }}
+          -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
           -Pcoverage
