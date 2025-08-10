@@ -1,4 +1,4 @@
-name: Build and Test
+name: CI
 
 on:
   pull_request:
@@ -28,24 +28,10 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Create private key and certificate for JWT signature
-        run: |
-          openssl req -x509 \
-          -newkey rsa:2048 \
-          -keyout src/main/resources/key.pem \
-          -out src/main/resources/cert.pem \
-          -days 365 \
-          -nodes \
-          -subj "/CN=ProductService"
-          
-          openssl pkcs12 -export \
-          -inkey src/main/resources/key.pem \
-          -in src/main/resources/cert.pem \
-          -out src/main/resources/keystore.p12 \
-          -name jtw_sign_key \
-          -passout pass:${{ secrets.JWT_KEYSTORE_PWD }}
-          
-          rm src/main/resources/cert.pem src/main/resources/key.pem
+      - name: Create keystore for JWT signature
+        uses: ./.github/actions/generate-jwt-signature-requirements
+        env:
+          JWT_KEYSTORE_PWD: ${{ secrets.JWT_KEYSTORE_PWD }}
 
       - name: Build and run tests
         run: ./mvnw test
@@ -73,24 +59,10 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Create private key and certificate for JWT signature
-        run: |
-          openssl req -x509 \
-          -newkey rsa:2048 \
-          -keyout src/main/resources/key.pem \
-          -out src/main/resources/cert.pem \
-          -days 365 \
-          -nodes \
-          -subj "/CN=ProductService"
-
-          openssl pkcs12 -export \
-          -inkey src/main/resources/key.pem \
-          -in src/main/resources/cert.pem \
-          -out src/main/resources/keystore.p12 \
-          -name jtw_sign_key \
-          -passout pass:${{ secrets.JWT_KEYSTORE_PWD }}
-
-          rm src/main/resources/cert.pem src/main/resources/key.pem
+      - name: Create keystore with JWT signature requirements
+        uses: ./.github/actions/generate-jwt-signature-requirements
+        env:
+          JWT_KEYSTORE_PWD: ${{ secrets.JWT_KEYSTORE_PWD }}
 
       - name: Run tests and CI-based analysis
         env:

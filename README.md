@@ -27,7 +27,7 @@ cp flyway.conf.example flyway.conf
 # 5. Generate private key and self-signed certificate for JWT signature generation and validation
 ## Note - on deployment environments (dev, staging, prod) always use CA signed certificates and secure keystore password
 openssl req -x509 -newkey rsa:2048 -keyout src/main/resources/key.pem -out src/main/resources/cert.pem -days 365 -nodes -subj "/CN=ProductService" \
-&& openssl pkcs12 -export -inkey src/main/resources/key.pem -in src/main/resources/cert.pem -out src/main/resources/keystore.p12 -name jtw_sign_key -passout pass:keystore-pwd \
+&& openssl pkcs12 -export -inkey src/main/resources/key.pem -in src/main/resources/cert.pem -out src/main/resources/keystore.p12 -name jwt_sign_key -passout pass:keystore-pwd \
 && rm src/main/resources/cert.pem src/main/resources/key.pem
 ```
 
