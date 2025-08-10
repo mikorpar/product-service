@@ -100,3 +100,4 @@ jobs:
           -Dsonar.host.url=${{ env.SONAR_HOST_URL }}
           -Dsonar.organization=${{ env.SONAR_ORGANISATION }}
           -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+          -Pcoverage

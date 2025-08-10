@@ -24,6 +24,9 @@
         <commons-lang3.version>3.18.0</commons-lang3.version>
         <modelmapper.version>3.2.4</modelmapper.version>
         <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
+        <!-- Intentionally left empty to serve as the default value. -->
+        <!-- Ensures that 'argLine' is defined in case it has not been set prior to the maven-surefire-plugin execution. -->
+        <argLine></argLine>
     </properties>
 
     <dependencyManagement>
